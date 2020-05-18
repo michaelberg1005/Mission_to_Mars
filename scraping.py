@@ -17,22 +17,13 @@ def scrape_all():
     news_title, news_p = mars_news(browser)
     
    
-    c_title, s_title, sy_title, v_title, c_url, s_url, sy_url, v_url = hemispheres_enhanced(browser)
-   
    # Run all scraping functions and store results in dictionary
     data = {
       "news_title": news_title,
       "news_paragraph": news_p,
       "featured_image": featured_image(browser),
       "facts": mars_facts(),
-      "c_title": c_title,
-      "s_title": s_title,
-      "sy_title": sy_title,
-      "v_title": v_title,
-      "c_url": c_url,
-      "s_url": s_url,
-      "sy_url": sy_url,
-      "v_url": v_url,
+      "hemispheres_enhanced":hemispheres_enhanced(browser),
       "last_modified": dt.datetime.now()
     }
 
@@ -168,20 +159,8 @@ def hemispheres_enhanced(browser):
         #update dictionary with title and url as key value pair
         hemispheres_enhanced.append({"title":hemi_title,"img":img_url})
     
-    hemi_titles =[element["title"] for element in hemispheres_enhanced]
-    hemi_urls = [element["img"] for element in hemispheres_enhanced]
 
-    c_title = hemi_titles[0]
-    s_title = hemi_titles[1]
-    sy_title = hemi_titles[2]
-    v_title = hemi_titles[3]
-
-    c_url = hemi_urls[0]
-    s_url = hemi_urls[1]
-    sy_url = hemi_urls[2]
-    v_url = hemi_urls[3]
-
-    return c_title, s_title, sy_title, v_title, c_url, s_url, sy_url, v_url
+    return hemispheres_enhanced
 
 browser.quit()
 
