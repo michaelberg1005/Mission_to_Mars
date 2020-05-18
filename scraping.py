@@ -15,14 +15,24 @@ def scrape_all():
     browser = Browser("chrome", executable_path="chromedriver", headless=True)
 
     news_title, news_p = mars_news(browser)
-
+    
+   
+    c_title, s_title, sy_title, v_title, c_url, s_url, sy_url, v_url = hemispheres_enhanced(browser)
+   
    # Run all scraping functions and store results in dictionary
     data = {
       "news_title": news_title,
       "news_paragraph": news_p,
       "featured_image": featured_image(browser),
       "facts": mars_facts(),
-      "hemispheres": hemispheres_enhanced(browser),
+      "c_title": c_title,
+      "s_title": s_title,
+      "sy_title": sy_title,
+      "v_title": v_title,
+      "c_url": c_url,
+      "s_url": s_url,
+      "sy_url": sy_url,
+      "v_url": v_url,
       "last_modified": dt.datetime.now()
     }
 
@@ -121,7 +131,7 @@ def hemispheres_enhanced(browser):
         return None
     
     #initiate empty list of dictionary of hemispheres urls and titles
-    hemi_urls_titles =[]
+    hemispheres_enhanced =[]
 
     #where a loop would start - get the relative href to set up click for each hemisphere
     for hemisphere in hemispheres:
@@ -152,16 +162,26 @@ def hemispheres_enhanced(browser):
         except AttributeError:
             return None
         
-        #img url linl
+        #img url link
         img_url = f'https://astrogeology.usgs.gov{hemi_img}'
         
         #update dictionary with title and url as key value pair
-        hemi_urls_titles.append({"title":hemi_title,"img":img_url})
+        hemispheres_enhanced.append({"title":hemi_title,"img":img_url})
+    
+    hemi_titles =[element["title"] for element in hemispheres_enhanced]
+    hemi_urls = [element["img"] for element in hemispheres_enhanced]
 
-    return hemi_urls_titles
+    c_title = hemi_titles[0]
+    s_title = hemi_titles[1]
+    sy_title = hemi_titles[2]
+    v_title = hemi_titles[3]
+
+    c_url = hemi_urls[0]
+    s_url = hemi_urls[1]
+    sy_url = hemi_urls[2]
+    v_url = hemi_urls[3]
+
+    return c_title, s_title, sy_title, v_title, c_url, s_url, sy_url, v_url
 
 browser.quit()
 
-if __name__ == "__main__":
-    # If running as script, print scraped data
-    print(scrape_all())

@@ -56,23 +56,58 @@
         </div>
       </div>
       
-      <!-- for loop for getting each of the images titles and pictures into the index-->
-      {% for hemisphere in mars.hemispheres_enhanced %}
-      <div class="row" id= "{{hemisphere.get('title')}}">
-        <div class="col-md-12">
-          <h2>{hemisphere.get('title')}</h2>
-
+      <!--starting section for enahnced images-->
+      <div class="row" id= "hemispheres enhanced">
+        <ul>
+          <div class="col-md-12">
+          <li>
+            <h2>{{mars.c_title}}</h2>
           <!--if image is fals or non existent than default error message-->
-          <img
-            src="{{hemisphere.get('img') | default('static/images/error.png', true) }}"
-            class="img-responsive"
-            alt="Responsive image"
-          />
-        </div>
-      </div>
-      {% endfor %}
-        
+              <img
+                src="{{mars.c_url | default('static/images/error.png', true) }}"
+                class="img-responsive"
+                alt="Responsive image"
+              />
+            </li>
+            </div>
+          
+          <div class="col-md-12">
+            <li>
+              <h2>{{mars.s_title}}</h2>
+            <!--if image is fals or non existent than default error message-->
+                <img
+                  src="{{mars.s_url | default('static/images/error.png', true) }}"
+                  class="img-responsive"
+                  alt="Responsive image"
+                />
+              </li>
+              </div>
 
+            <div class="col-md-12">
+              <li>
+                <h2>{{mars.sy_title}}</h2>
+              <!--if image is fals or non existent than default error message-->
+                  <img
+                    src="{{mars.sy_url | default('static/images/error.png', true) }}"
+                    class="img-responsive"
+                    alt="Responsive image"
+                  />
+                </li>
+                </div>
+
+            <div class="col-md-12">
+              <li>
+                <h2>{{mars.v_title}}</h2>
+              <!--if image is fals or non existent than default error message-->
+                  <img
+                    src="{{mars.v_url | default('static/images/error.png', true) }}"
+                    class="img-responsive"
+                    alt="Responsive image"
+                  />
+                </li>
+                </div>
+
+      </div>
     </div>
   </body>
 </html>
