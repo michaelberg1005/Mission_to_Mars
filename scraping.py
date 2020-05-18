@@ -14,23 +14,21 @@ def scrape_all():
     # Initiate headless driver for deployment
     browser = Browser("chrome", executable_path="chromedriver", headless=True)
 
-    news_title, news_paragraph = mars_news(browser)
+    news_title, news_p = mars_news(browser)
 
    # Run all scraping functions and store results in dictionary
     data = {
       "news_title": news_title,
-      "news_paragraph": news_paragraph,
+      "news_paragraph": news_p,
       "featured_image": featured_image(browser),
       "facts": mars_facts(),
+      "hemispheres": hemispheres_enhanced(browser),
       "last_modified": dt.datetime.now()
     }
 
     browser.quit()
 
     return data
-
-
-
 
 
 def mars_news(browser):
@@ -106,9 +104,64 @@ def mars_facts():
     #CONVERT INTO html FORMAT, ADD BOOTSTRAP
     return df.to_html()
 
+
+def hemispheres_enhanced(browser):
+    # Visit URL
+    url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+    browser.visit(url) 
+
+    #initiaite parser
+    html = browser.html
+    soup = BeautifulSoup(html, "html.parser")
+
+    #find the 4 descriptions that are for each hemisphere (change to find_all and then do for loop)
+    try:
+        hemispheres = soup.find("div",class_="description")
+    except AttributeError:
+        return None
+    
+    #initiate empty list of dictionary of hemispheres urls and titles
+    hemi_urls_titles =[]
+
+    #where a loop would start - get the relative href to set up click for each hemisphere
+    for hemisphere in hemispheres:
+        try:
+            hemi_href = hemisphere.find("a", href=True).get("href")
+        except AttributeError:
+            return None
+
+        #set up going to a new url where enhanced image is (replaced by the relative location)
+        enhanced_url = f'https://astrogeology.usgs.gov{hemi_href}'
+        
+        #go to enhanced image url
+        browser.visit(enhanced_url)
+        
+        #relative url part 2 - for getting src
+        html2 = browser.html
+        soup2 = BeautifulSoup (html2,"html.parser")
+        
+        #get title
+        try:
+            hemi_title = soup2.find("h2", class_="title").get_text()
+        except AttributeError:
+            return None
+        
+        #get relative path for img url
+        try:
+            hemi_img = soup2.find("img", class_="wide-image").get("src")
+        except AttributeError:
+            return None
+        
+        #img url linl
+        img_url = f'https://astrogeology.usgs.gov{hemi_img}'
+        
+        #update dictionary with title and url as key value pair
+        hemi_urls_titles.append({"title":hemi_title,"img":img_url})
+
+    return hemi_urls_titles
+
 browser.quit()
 
 if __name__ == "__main__":
     # If running as script, print scraped data
     print(scrape_all())
-
